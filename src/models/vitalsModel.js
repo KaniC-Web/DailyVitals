@@ -1,24 +1,16 @@
-// src/routes/vitalsRoutes.js
+// src/models/vitalsModel.js
 
-const express = require('express');
-const router = express.Router();
+let vitals = [];
 
-// Import the controller functions
-const { createVital, getVitals, getVitalById, updateVital, deleteVital } = require('../controllers/vitalsController');
+const createVital = (newVital) => {
+  vitals.push(newVital);
+  return newVital;
+};
 
-// Create Vital - POST
-router.post('/vitals', createVital);
+const getVitals = () => {
+  return vitals;
+};
 
-// Get all vitals - GET
-router.get('/vitals', getVitals);
-
-// Get single vital by ID - GET
-router.get('/vitals/:id', getVitalById);
-
-// Update vital - PUT
-router.put('/vitals/:id', updateVital);
-
-// Delete vital - DELETE
-router.delete('/vitals/:id', deleteVital);
-
-module.exports = router;
+const getVitalById = (id) => {
+  return vitals.find((vital) => vital.id)
+}
