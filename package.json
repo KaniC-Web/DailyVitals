@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.1"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
