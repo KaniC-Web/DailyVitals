@@ -2,15 +2,16 @@
 
 let vitals = [];
 
+// Create a new vital
 const createVital = (newVital) => {
   vitals.push(newVital);
   return newVital;
 };
 
-const getVitals = () => {
-  return vitals;
-};
+// Get all vitals
+const getVitals = () => vitals;
 
-const getVitalById = (id) => {
-  return vitals.find((vital) => vital.id)
-}
+// Get a vital by ID
+const getVitalById = (id) => vitals.find((vital) => vital.id === id);
+
+module.exports = { createVital, getVitals, getVitalById };
