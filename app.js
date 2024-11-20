@@ -1,41 +1,48 @@
-// app.js
+// Import required modules
+
+require('dotenv').config();
 
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const vitalsRoutes = require('./src/routes/vitalsRoutes');
 
-// Use body-parser middleware to parse JSON
+// Initialize Express app
+const app = express();
+
+// Middleware to parse JSON requests
 app.use(bodyParser.json());
 
-// Use the vitals routes
+// API routes for vitals
 app.use('/api', vitalsRoutes);
 
-// Test route to check if the server is running
+// Base route to verify server is running
 app.get('/', (req, res) => {
-  res.send('API is running');
+  res.send('Welcome to the Daily Vitals API!');
 });
+
+// Global Error Handler (handles all uncaught errors)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({ error: err.message || 'Something went wrong!' });
+});
+
+// MongoDB connection
+const mongoDBUrl = process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals';
+mongoose
+  .connect(mongoDBUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
 
 // Start the server
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
-// Global Error Handler (after all your routes and middleware)
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send({ error: 'Something went wrong!' });
-  });
-  
-  const mongoose = require('mongoose');
-
-// MongoDB connection string (replace with your MongoDB URL)
-mongoose.connect('mongodb://localhost:27017/dailyVitals', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((error) => {
-  console.log('Error connecting to MongoDB:', error);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
