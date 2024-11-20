@@ -1,24 +1,35 @@
 // src/controllers/vitalsController.js
 const Vitals = require('../models/vitalsModel');
+const Joi = require('joi');
+
+// Validation schema
+const vitalSchema = Joi.object({
+  id: Joi.string().required(),
+  heartRate: Joi.number().min(40).max(180).required(),
+  bloodPressure: Joi.string().required(),
+  temperature: Joi.number().min(95).max(105).required(),
+});
 
 // Create a new vital
-const createVital = (req, res) => {
-  const { id, heartRate, bloodPressure, temperature } = req.body;
-  if (!id || !heartRate || !bloodPressure || !temperature) {
-    return res.status(400).json({ message: 'All fields are required' });
+const createVital = async (req, res) => {
+  try {
+    const vital = new Vital(req.body);
+    const savedVital = await vital.save();
+    res.status(201).json(savedVital);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating vital', error });
   }
-
-  const newVital = { id, heartRate, bloodPressure, temperature };
-  const createdVital = Vitals.createVital(newVital);
-  return res.status(201).json(createdVital);
 };
 
 // Get all vitals
-const getVitals = (req, res) => {
-  const allVitals = Vitals.getVitals();
-  return res.status(200).json(allVitals);
+const getVitals = async (req, res) => {
+  try {
+    const vitals = await Vital.find();
+    res.status(200).json(vitals);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching vitals', error });
+  }
 };
-
 // Get vital by ID
 const getVitalById = (req, res) => {
   const { id } = req.params;
