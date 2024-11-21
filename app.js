@@ -1,9 +1,6 @@
 // Import required modules
-
 require('dotenv').config();
-
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const vitalsRoutes = require('./src/routes/vitalsRoutes');
 
@@ -26,20 +23,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({ error: err.message || 'Something went wrong!' });
 });
-
-// MongoDB connection
-const mongoDBUrl = process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals';
-mongoose
-  .connect(mongoDBUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-  });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
