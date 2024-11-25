@@ -1,29 +1,45 @@
-const mongoose = require('mongoose');
+// In-memory array to store vitals
+const vitalsData = [];
 
-const vitalSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  heartRate: { type: Number, required: true },
-  bloodPressure: { type: String, required: true },
-  temperature: { type: Number, required: true },
-});
+// Get all vitals
+const getAllVitals = () => {
+  return vitalsData;
+};
 
-const Vital = mongoose.model('Vital', vitalSchema);
-
-module.exports = Vital;
-
-
-let vitals = [];
+// Get a single vital by ID
+const getVitalById = (id) => {
+  return vitalsData.find((vital) => vital.id === id);
+};
 
 // Create a new vital
 const createVital = (newVital) => {
-  vitals.push(newVital);
+  vitalsData.push(newVital);
   return newVital;
 };
 
-// Get all vitals
-const getVitals = () => vitals;
+// Update a vital by ID
+const updateVital = (id, updatedVital) => {
+  const index = vitalsData.findIndex((vital) => vital.id === id);
+  if (index !== -1) {
+    vitalsData[index] = { ...vitalsData[index], ...updatedVital };
+    return vitalsData[index];
+  }
+  return null;
+};
 
-// Get a vital by ID
-const getVitalById = (id) => vitals.find((vital) => vital.id === id);
+// Delete a vital by ID
+const deleteVital = (id) => {
+  const index = vitalsData.findIndex((vital) => vital.id === id);
+  if (index !== -1) {
+    return vitalsData.splice(index, 1);
+  }
+  return null;
+};
 
-module.exports = { createVital, getVitals, getVitalById };
+module.exports = {
+  getAllVitals,
+  getVitalById,
+  createVital,
+  updateVital,
+  deleteVital,
+};
