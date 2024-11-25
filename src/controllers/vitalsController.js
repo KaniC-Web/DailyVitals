@@ -1,4 +1,4 @@
-//Test change fit Git
+//Test change for Git
 const vitalsModel = require('../models/vitalsModel');
 
 // Get all vitals
