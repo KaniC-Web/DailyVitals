@@ -36,4 +36,17 @@ vitalsForm.addEventListener('submit', (event) => {
 
     const vital = { id, heartRate, bloodPressure, temperature };
 
-});
+    fetch('http://localhost:5000/api/vitals', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vital),
+      })
+        .then(response => response.json())
+        .then(() => {
+          fetchVitals(); // Refresh vitals list
+          vitalsForm.reset(); // Clear the form
+        })
+        .catch(error => console.log(error));
+    });
