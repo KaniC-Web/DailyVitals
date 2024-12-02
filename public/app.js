@@ -24,3 +24,16 @@ function fetchVitals() {
       })
       .catch(error => console.log(error));
   }
+
+// Handle form submission to add a new vital
+vitalsForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const id = document.getElementById('id').value;
+    const heartRate = document.getElementById('heartRate').value;
+    const bloodPressure = document.getElementById('bloodPressure').value;
+    const temperature = document.getElementById('temperature').value;
+
+    const vital = { id, heartRate, bloodPressure, temperature };
+
+});
