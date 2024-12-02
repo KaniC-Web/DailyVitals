@@ -49,7 +49,6 @@ vitalsForm.addEventListener('submit', (event) => {
           vitalsForm.reset(); // Clear the form
         })
         .catch(error => console.log(error));
-    });
 
     // Delete vital by ID
     window.deleteVital = function (id) {
@@ -59,3 +58,6 @@ vitalsForm.addEventListener('submit', (event) => {
       .then(() => fetchVitals()) // Refresh vitals list
       .catch(error => console.log(error));
   };
+    // Initial fetch of vitals
+    fetchVitals();
+});
