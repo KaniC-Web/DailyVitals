@@ -50,3 +50,12 @@ vitalsForm.addEventListener('submit', (event) => {
         })
         .catch(error => console.log(error));
     });
+
+    // Delete vital by ID
+    window.deleteVital = function (id) {
+    fetch(`http://localhost:5000/api/vitals/${id}`, {
+      method: 'DELETE',
+    })
+      .then(() => fetchVitals()) // Refresh vitals list
+      .catch(error => console.log(error));
+  };
