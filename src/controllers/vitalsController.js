@@ -2,19 +2,24 @@
 const vitalsModel = require('../models/vitalsModel');
 
 // Get all vitals
-const getVitals = (req, res) => {
-  const vitals = vitalsModel.getAllVitals();
-  res.status(200).json(vitals);
+const getAllVitals = async (req, res) => {
+  try {
+    const vitals = await Vitals.find();
+    res.status(200).json(vitals);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch vitals' });
+  }
 };
 
 // Get a single vital by ID
 const getVitalById = (req, res) => {
   const { id } = req.params;
-  const vital = vitalsModel.getVitalById(id);
-  if (!vital) {
-    return res.status(404).json({ message: 'Vital not found' });
-  }
+  try{
+    const vital = await Vitals.findOne({ id });
+  if (!vital) return res.status(404).json({ error: 'Vital not found' }); 
   res.status(200).json(vital);
+    }
+  
 };
 
 // Create a new vital
