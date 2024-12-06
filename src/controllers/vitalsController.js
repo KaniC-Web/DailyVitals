@@ -19,9 +19,11 @@ const getVitalById = (req, res) => {
   if (!vital) return res.status(404).json({ error: 'Vital not found' }); 
   res.status(200).json(vital);
     }
+    catch (error) {
+      res.status(500).json({ error: 'Failed to fetch vital' });
+    }
+  };
   
-};
-
 // Create a new vital
 const createVital = (req, res) => {
   const { id, heartRate, bloodPressure, temperature } = req.body;
