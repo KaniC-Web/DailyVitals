@@ -15,7 +15,7 @@ const getAllVitals = async (req, res) => {
 const getVitalById = (req, res) => {
   const { id } = req.params;
   try{
-    const vital = await Vitals.findOne({ id });
+    const vital = await vitals.findOne({ id });
   if (!vital) return res.status(404).json({ error: 'Vital not found' }); 
   res.status(200).json(vital);
     }
@@ -25,11 +25,16 @@ const getVitalById = (req, res) => {
   };
   
 // Create a new vital
-const createVital = (req, res) => {
+const createVital = async(req, res) => {
   const { id, heartRate, bloodPressure, temperature } = req.body;
-  const newVital = { id, heartRate, bloodPressure, temperature };
-  const createdVital = vitalsModel.createVital(newVital);
-  res.status(201).json(createdVital);
+  try{
+    const newVital = { id, heartRate, bloodPressure, temperature };
+    await newVital.save();
+    res.status(201).json(newVital);
+  }
+  catch{
+    res.status(400).json({error:'Failed to create a new vital'})
+  }
 };
 
 // Update a vital by ID
