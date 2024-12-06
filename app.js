@@ -10,6 +10,15 @@ const app = express();
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => console.error('Error connecting to MongoDB:', error));
+
+
 // API routes for vitals
 app.use('/api', vitalsRoutes);
 
