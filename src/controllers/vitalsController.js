@@ -15,7 +15,7 @@ const getAllVitals = async (req, res) => {
 const getVitalById = (req, res) => {
   const { id } = req.params;
   try{
-    const vital = await vitals.findOne({ id });
+    const vital = await Vitals.findOne({ id });
   if (!vital) return res.status(404).json({ error: 'Vital not found' }); 
   res.status(200).json(vital);
     }
