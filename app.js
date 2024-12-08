@@ -21,8 +21,18 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('Error connecting to MongoDB:', error));
+.then(() => console.log('Connected to MongoDB'))
+.catch((error) => console.error('Error connecting to MongoDB:', error));
+
+// Create a Schema for the vitals
+const vitalsSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true }, // Custom id field
+  heartRate: Number,
+  bloodPressure: String,
+  temperature: Number,
+}, { toJSON: { virtuals: true, versionKey: false, transform: (doc, ret) => { delete ret._id; } } });
+
+const Vital = mongoose.model('Vital', vitalsSchema);
 
 // API routes for vitals
 app.use('/api', vitalsRoutes);
