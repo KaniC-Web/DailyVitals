@@ -11,12 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "joi": "^17.13.3"
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "mongoose": "^8.8.4"
   },
   "directories": {
     "test": "tests"
-  },
-  "devDependencies": {}
+  }
 }
