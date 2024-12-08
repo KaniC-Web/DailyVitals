@@ -5,7 +5,7 @@ const router = express.Router();
 // Import controller functions
 const {
   createVital,
-  getVitals,
+  getAllVitals,
   getVitalById,
   updateVital,
   deleteVital,
@@ -13,7 +13,7 @@ const {
 
 // Define routes
 router.post('/vitals', createVital); // Create a new vital
-router.get('/vitals', getVitals); // Get all vitals
+router.get('/vitals', getAllVitals); // Get all vitals
 router.get('/vitals/:id', getVitalById); // Get a specific vital by ID
 router.put('/vitals/:id', updateVital); // Update a specific vital by ID
 router.delete('/vitals/:id', deleteVital); // Delete a specific vital by ID
