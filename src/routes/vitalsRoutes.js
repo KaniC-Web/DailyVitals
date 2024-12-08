@@ -1,20 +1,49 @@
 const express = require('express');
 const router = express.Router();
+const Vital = require('../models/vitalModel');
 
-// Import controller functions
-const {
-  createVital,
-  getAllVitals,
-  getVitalById,
-  updateVital,
-  deleteVital,
-} = require('../controllers/vitalsController');
+// Read all vitals
+router.get('/vitals', (req, res) => {
+  Vital.find()
+    .then(vitals => res.json(vitals))
+    .catch(error => res.status(500).json({ message: 'Error fetching vitals' }));
+});
 
-// Define routes
-router.post('/vitals', createVital); // Create a new vital
-router.get('/vitals', getAllVitals); // Get all vitals
-router.get('/vitals/:id', getVitalById); // Get a specific vital by ID
-router.put('/vitals/:id', updateVital); // Update a specific vital by ID
-router.delete('/vitals/:id', deleteVital); // Delete a specific vital by ID
+// Read a specific vital by ID
+router.get('/vitals/:id', (req, res) => {
+  const { id } = req.params;
+  Vital.findById(id)
+    .then(vital => res.json(vital))
+    .catch(error => res.status(404).json({ message: 'Vital not found' }));
+});
+
+// Create a new vital entry
+router.post('/vitals', (req, res) => {
+  const { heartRate, bloodPressure, temperature } = req.body;
+  const newVital = new Vital({ heartRate, bloodPressure, temperature });
+
+  newVital.save()
+    .then(vital => res.status(201).json(vital))
+    .catch(error => res.status(400).json({ message: 'Error adding vital' }));
+});
+
+// Update a specific vital entry
+router.put('/vitals/:id', (req, res) => {
+  const { id } = req.params;
+  const { heartRate, bloodPressure, temperature } = req.body;
+
+  Vital.findByIdAndUpdate(id, { heartRate, bloodPressure, temperature }, { new: true })
+    .then(updatedVital => res.json(updatedVital))
+    .catch(error => res.status(400).json({ message: 'Error updating vital' }));
+});
+
+// Delete a specific vital entry
+router.delete('/vitals/:id', (req, res) => {
+  const { id } = req.params;
+
+  Vital.findByIdAndDelete(id)
+    .then(() => res.json({ message: 'Vital deleted successfully' }))
+    .catch(error => res.status(400).json({ message: 'Error deleting vital' }));
+});
 
 module.exports = router;

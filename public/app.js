@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Fetch all vitals from the API and display them
     function fetchVitals() {
-      fetch('http://localhost:5000/api/vitals')
+      fetch('http://localhost:5001/api/vitals')
         .then(response => response.json())
         .then(data => {
           vitalsTableBody.innerHTML = ''; // Clear the existing table rows
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const vital = { id, heartRate, bloodPressure, temperature };
   
-      fetch('http://localhost:5000/api/vitals', {
+      fetch('http://localhost:5001/api/vitals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Delete a vital by its ID
     window.deleteVital = function(id) {
-      fetch(`http://localhost:5000/api/vitals/${id}`, {
+      fetch(`http://localhost:5001/api/vitals/${id}`, {
         method: 'DELETE',
       })
       .then(() => fetchVitals()) // Refresh the vitals table
