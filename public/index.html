@@ -80,19 +80,19 @@
     <!-- Form to add or update vitals -->
     <div class="form-group">
       <label for="id">ID</label>
-      <input type="text" id="id" disabled />
+      <input type="text" id="id" placeholder="Enter ID for Vital" />
     </div>
     <div class="form-group">
       <label for="heartRate">Heart Rate</label>
-      <input type="number" id="heartRate" />
+      <input type="number" id="heartRate" placeholder="Enter Heart Rate" />
     </div>
     <div class="form-group">
       <label for="bloodPressure">Blood Pressure</label>
-      <input type="number" id="bloodPressure" />
+      <input type="number" id="bloodPressure" placeholder="Enter Blood Pressure" />
     </div>
     <div class="form-group">
       <label for="temperature">Temperature</label>
-      <input type="number" id="temperature" />
+      <input type="number" id="temperature" placeholder="Enter Temperature" />
     </div>
     <div class="form-group">
       <button id="submitButton" onclick="addOrUpdateVital()">Add Vital</button>
@@ -126,13 +126,13 @@
           vitals.forEach(vital => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${vital._id}</td>
+              <td>${vital.id}</td>
               <td>${vital.heartRate}</td>
               <td>${vital.bloodPressure}</td>
               <td>${vital.temperature}</td>
               <td>
-                <button onclick="editVital('${vital._id}')">Edit</button>
-                <button onclick="deleteVital('${vital._id}')">Delete</button>
+                <button onclick="editVital('${vital.id}')">Edit</button>
+                <button onclick="deleteVital('${vital.id}')">Delete</button>
               </td>
             `;
             vitalsTable.appendChild(row);
@@ -186,7 +186,7 @@
       fetch(`http://localhost:5001/api/vitals/${id}`)
         .then(response => response.json())
         .then(vital => {
-          document.querySelector('#id').value = vital._id;
+          document.querySelector('#id').value = vital.id;
           document.querySelector('#heartRate').value = vital.heartRate;
           document.querySelector('#bloodPressure').value = vital.bloodPressure;
           document.querySelector('#temperature').value = vital.temperature;
