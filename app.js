@@ -1,32 +1,60 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const vitalsRoutes = require('./src/routes/vitalsRoutes');
-require('dotenv').config();
+document.addEventListener('DOMContentLoaded', () => { 
+  const vitalsForm = document.getElementById('vitalsForm');
+  const vitalsTableBody = document.querySelector('#vitalsTable tbody');
 
-const app = express();
+  function fetchVitals() {
+    fetch('http://localhost:5000/api/vitals')
+      .then(response => response.json())
+      .then(data => {
+        vitalsTableBody.innerHTML = '';
+        data.forEach(vital => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${vital.id}</td>
+            <td>${vital.heartRate}</td>
+            <td>${vital.bloodPressure}</td>
+            <td>${vital.temperature}</td>
+            <td>
+              <button onclick="deleteVital('${vital.id}')">Delete</button>
+            </td>
+          `;
+          vitalsTableBody.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Error fetching vitals:', error));
+  }
 
-// Middleware to parse JSON requests
-app.use(bodyParser.json());
+  vitalsForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const id = document.getElementById('id').value;
+    const heartRate = document.getElementById('heartRate').value;
+    const bloodPressure = document.getElementById('bloodPressure').value;
+    const temperature = document.getElementById('temperature').value;
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('Error connecting to MongoDB:', error));
+    const vital = { id, heartRate, bloodPressure, temperature };
 
-// API routes for vitals
-app.use('/api', vitalsRoutes);
+    fetch('http://localhost:5000/api/vitals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(vital),
+    })
+      .then(response => response.json())
+      .then(() => {
+        fetchVitals();
+        vitalsForm.reset();
+      })
+      .catch(error => console.error('Error adding vital:', error));
+  });
 
-// Base route
-app.get('/', (req, res) => {
-  res.send('Welcome to the Daily Vitals API!');
-});
+  window.deleteVital = function(id) {
+    fetch(`http://localhost:5000/api/vitals/${id}`, {
+      method: 'DELETE',
+    })
+    .then(() => fetchVitals())
+    .catch(error => console.error('Error deleting vital:', error));
+  };
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  fetchVitals();
 });
