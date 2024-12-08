@@ -38,12 +38,23 @@ router.put('/vitals/:id', (req, res) => {
 });
 
 // Delete a specific vital entry
-router.delete('/vitals/:id', (req, res) => {
-  const { id } = req.params;
+router.delete('/vitals/:id', async (req, res) => {
+  const { id } = req.params; // Get the id from the URL
 
-  Vital.findByIdAndDelete(id)
-    .then(() => res.json({ message: 'Vital deleted successfully' }))
-    .catch(error => res.status(400).json({ message: 'Error deleting vital' }));
+  try {
+    // Delete the vital from the database using the 'id' field
+    const result = await Vital.findOneAndDelete({ id });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Vital not found' });
+    }
+
+    // Send success response
+    res.status(200).json({ message: 'Vital deleted' });
+  } catch (err) {
+    console.error('Error deleting vital:', err);
+    res.status(500).json({ message: 'Failed to delete vital' });
+  }
 });
 
 module.exports = router;
