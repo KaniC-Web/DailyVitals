@@ -9,7 +9,7 @@ const app = express();
 
 // Use CORS middleware to allow cross-origin requests
 app.use(cors({
-  origin: 'http://127.0.0.1:5500',  // Allow requests only from your front-end URL
+  origin: 'http://127.0.0.1:5500',  // Allow requests only from your front-end URL (adjust this as needed)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow certain HTTP methods
 }));
 
@@ -21,10 +21,10 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('Connected to MongoDB'))
-.catch((error) => console.error('Error connecting to MongoDB:', error));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => console.error('Error connecting to MongoDB:', error));
 
-// API routes for vitals
+// API routes for vitals (imported from vitalsRoutes)
 app.use('/api', vitalsRoutes);
 
 // Base route
@@ -34,6 +34,6 @@ app.get('/', (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 5001;
-app.listen(5001, () => {
-  console.log(`Server running on http://localhost:${5001}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
