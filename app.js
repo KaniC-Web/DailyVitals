@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals
 
 // Create a Schema for the vitals
 const vitalsSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true }, // Custom id field
+  id: { type: String, required: true, unique: true }, // Custom id field (String)
   heartRate: Number,
   bloodPressure: String,
   temperature: Number,
@@ -34,8 +34,67 @@ const vitalsSchema = new mongoose.Schema({
 
 const Vital = mongoose.model('Vital', vitalsSchema);
 
-// API routes for vitals
-app.use('/api', vitalsRoutes);
+// API Routes for vitals CRUD operations
+
+// Get all vitals
+app.get('/api/vitals', async (req, res) => {
+  try {
+    const vitals = await Vital.find();
+    res.json(vitals); // Return all vitals
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving vitals' });
+  }
+});
+
+// Add a new vital
+app.post('/api/vitals', async (req, res) => {
+  const { id, heartRate, bloodPressure, temperature } = req.body;
+
+  try {
+    const newVital = new Vital({ id, heartRate, bloodPressure, temperature });
+    await newVital.save();
+    res.status(201).json(newVital); // Return the newly created vital
+  } catch (err) {
+    res.status(400).json({ message: 'Error adding new vital' });
+  }
+});
+
+// Update an existing vital
+app.put('/api/vitals/:id', async (req, res) => {
+  const { id } = req.params;
+  const { heartRate, bloodPressure, temperature } = req.body;
+
+  try {
+    const updatedVital = await Vital.findOneAndUpdate(
+      { id }, // Find the vital by its custom 'id'
+      { heartRate, bloodPressure, temperature }, // Update the values
+      { new: true } // Return the updated document
+    );
+    
+    if (!updatedVital) {
+      return res.status(404).json({ message: 'Vital not found' });
+    }
+
+    res.json(updatedVital); // Return the updated vital
+  } catch (err) {
+    res.status(400).json({ message: 'Error updating vital' });
+  }
+});
+
+// Delete a vital
+app.delete('/api/vitals/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedVital = await Vital.findOneAndDelete({ id });
+    if (!deletedVital) {
+      return res.status(404).json({ message: 'Vital not found' });
+    }
+    res.json({ message: 'Vital deleted' }); // Success message
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting vital' });
+  }
+});
 
 // Base route
 app.get('/', (req, res) => {
@@ -44,6 +103,6 @@ app.get('/', (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 5001;
-app.listen(5001, () => {
-  console.log(`Server running on http://localhost:${5001}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
