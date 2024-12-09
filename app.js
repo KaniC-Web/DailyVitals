@@ -14,7 +14,11 @@ app.use(cors({
 }));
 
 // Middleware to parse JSON requests
+app.use(cors());  
 app.use(bodyParser.json());
+
+// Use routes
+app.use('/api/vitals', vitalsRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals', {
