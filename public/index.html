@@ -137,8 +137,12 @@
             vitalsTable.appendChild(row);
           });
         })
-        .catch(error => console.error('Error fetching vitals:', error));
-    }
+        .catch(error => {
+          console.error('Error fetching vitals:', error);
+          console.log('Error message:', error.message); // Logs the specific error message
+          alert('There was an issue with fetching vitals. Please check the server status.');
+    });
+  }
 
     // Add or update a vital record
     function addOrUpdateVital() {
