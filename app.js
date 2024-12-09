@@ -53,6 +53,7 @@ app.get('/api/vitals', async (req, res) => {
 // Add a new vital
 // Assuming you're using Express.js
 app.post('/api/vitals', (req, res) => {
+  console.log('Received request:', req.body);
   const { heartRate, bloodPressure, temperature } = req.body;
 
   if (!heartRate || !bloodPressure || !temperature) {
