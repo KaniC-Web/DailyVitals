@@ -13,6 +13,13 @@ app.use(cors());
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
+//to check the server receives the request
+app.use('/api', (req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+app.use('/api', vitalsRoutes);
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals', {
   useNewUrlParser: true,

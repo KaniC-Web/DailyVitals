@@ -8,12 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const bloodPressureInput = document.getElementById('editBloodPressure');
   const temperatureInput = document.getElementById('editTemperature');
 
+  // Fetch all vitals and populate the table
   function fetchVitals() {
     fetch('http://localhost:5001/api/vitals')
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         vitalsTableBody.innerHTML = '';
-        data.forEach(vital => {
+        data.forEach((vital) => {
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${vital._id}</td>
@@ -21,18 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${vital.bloodPressure}</td>
             <td>${vital.temperature}</td>
             <td>
-              <button onclick="editVital('${vital._id}', '${vital.heartRate}', '${vital.bloodPressure}', '${vital.temperature}')">Edit</button>
+              <button class="edit" onclick="editVital('${vital._id}', '${vital.heartRate}', '${vital.bloodPressure}', '${vital.temperature}')">Edit</button>
               <button class="delete" onclick="deleteVital('${vital._id}')">Delete</button>
             </td>
           `;
           vitalsTableBody.appendChild(row);
         });
       })
-      .catch(error => console.error('Error fetching vitals:', error));
+      .catch((error) => console.error('Error fetching vitals:', error));
   }
 
-  // Show edit modal
-  window.editVital = function(id, heartRate, bloodPressure, temperature) {
+  // Open the edit modal and populate with the selected vital's details
+  window.editVital = function (id, heartRate, bloodPressure, temperature) {
     idInput.value = id;
     heartRateInput.value = heartRate;
     bloodPressureInput.value = bloodPressure;
@@ -45,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editModal.style.display = 'none';
   });
 
-  // Handle update
+  // Update a vital record
   editForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const id = idInput.value;
@@ -53,53 +54,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const bloodPressure = bloodPressureInput.value;
     const temperature = temperatureInput.value;
 
-    const vital = { heartRate, bloodPressure, temperature };
+    const updatedVital = { heartRate, bloodPressure, temperature };
 
     fetch(`http://localhost:5001/api/vitals/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(vital),
+      body: JSON.stringify(updatedVital),
     })
-      .then(response => response.json())
-      .then(() => {
-        fetchVitals();
-        editModal.style.display = 'none';
+      .then((response) => {
+        if (response.ok) {
+          alert('Vital updated successfully!');
+          fetchVitals();
+          editModal.style.display = 'none';
+        } else {
+          console.error('Error updating vital:', response.statusText);
+        }
       })
-      .catch(error => console.error('Error updating vital:', error));
-  });
+      .catch((error) => console.error('Error updating vital:', error));
+  }); 
 
+  // Add a new vital record
   vitalsForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const heartRate = document.getElementById('heartRate').value;
     const bloodPressure = document.getElementById('bloodPressure').value;
     const temperature = document.getElementById('temperature').value;
 
-    const vital = { heartRate, bloodPressure, temperature };
+    const newVital = { heartRate, bloodPressure, temperature };
 
     fetch('http://localhost:5001/api/vitals', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(vital),
+      body: JSON.stringify(newVital),
     })
-      .then(response => response.json())
+      .then((response) => response.json())
       .then(() => {
         fetchVitals();
         vitalsForm.reset();
       })
-      .catch(error => console.error('Error adding vital:', error));
+      .catch((error) => console.error('Error adding vital:', error));
   });
 
-  window.deleteVital = function(id) {
+  // Delete a vital record
+  window.deleteVital = function (id) {
     fetch(`http://localhost:5001/api/vitals/${id}`, {
       method: 'DELETE',
     })
       .then(() => fetchVitals())
-      .catch(error => console.error('Error deleting vital:', error));
+      .catch((error) => console.error('Error deleting vital:', error));
   };
 
+  // Initialize the vitals list
   fetchVitals();
 });
