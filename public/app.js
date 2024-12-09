@@ -3,29 +3,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const vitalsTableBody = document.querySelector('#vitalsTable tbody');
   
     // Fetch all vitals from the API and display them
-    function fetchVitals() {
-      fetch('http://localhost:5001/api/vitals')
-        .then(response => response.json())
-        .then(data => {
-          vitalsTableBody.innerHTML = ''; // Clear the existing table rows
+    fetch('http://localhost:5001/api/vitals')  // Ensure the server is running on this port
+    .then(response => response.json())
+    .then(vitals => {
+      const vitalsTable = document.querySelector('#vitals-table');
+      vitalsTable.innerHTML = ''; // Clear the table
+      vitals.forEach(vital => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${vital._id}</td>
+          <td>${vital.heartRate}</td>
+          <td>${vital.bloodPressure}</td>
+          <td>${vital.temperature}</td>
+          <td>
+            <button onclick="editVital('${vital._id}')">Edit</button>
+            <button onclick="deleteVital('${vital._id}')">Delete</button>
+          </td>
+        `;
+        vitalsTable.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error fetching vitals:', error));
   
-          // Loop through vitals data and create table rows
-          data.forEach(vital => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${vital.id}</td>
-              <td>${vital.heartRate}</td>
-              <td>${vital.bloodPressure}</td>
-              <td>${vital.temperature}</td>
-              <td>
-                <button onclick="deleteVital('${vital.id}')">Delete</button>
-              </td>
-            `;
-            vitalsTableBody.appendChild(row); // Add row to the table
-          });
-        })
-        .catch(error => console.error('Error fetching vitals:', error));
-    }
   
     // Handle the form submission to add a new vital
     vitalsForm.addEventListener('submit', (event) => {
