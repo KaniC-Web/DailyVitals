@@ -69,7 +69,7 @@ app.post('/api/vitals', (req, res) => {
   };
 
   vitals.push(newVital); // Push to an array or save in DB
-  res.status(201).json(newVital); // Respond with the created vital
+  res.json({ message: 'Data received successfully' });
 });
 
 
