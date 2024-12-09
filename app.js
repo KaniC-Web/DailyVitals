@@ -51,17 +51,26 @@ app.get('/api/vitals', async (req, res) => {
 });
 
 // Add a new vital
-app.post('/api/vitals', async (req, res) => {
-  const { id, heartRate, bloodPressure, temperature } = req.body;
+// Assuming you're using Express.js
+app.post('/api/vitals', (req, res) => {
+  const { heartRate, bloodPressure, temperature } = req.body;
 
-  try {
-    const newVital = new Vital({ id, heartRate, bloodPressure, temperature });
-    await newVital.save();
-    res.status(201).json(newVital); // Return the newly created vital
-  } catch (err) {
-    res.status(400).json({ message: 'Error adding new vital' });
+  if (!heartRate || !bloodPressure || !temperature) {
+    return res.status(400).json({ message: 'All fields are required' });
   }
+
+  // Add the vital data to the database or in-memory storage
+  const newVital = {
+    id: Date.now(), // Or generate a unique ID
+    heartRate,
+    bloodPressure,
+    temperature
+  };
+
+  vitals.push(newVital); // Push to an array or save in DB
+  res.status(201).json(newVital); // Respond with the created vital
 });
+
 
 // Update an existing vital
 app.put('/api/vitals/:id', async (req, res) => {
