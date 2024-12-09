@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const vitalSchema = new mongoose.Schema({
+const vitalsSchema = new mongoose.Schema({
   heartRate: { type: Number, required: true },
   bloodPressure: { type: String, required: true },
-  temperature: { type: Number, required: true }
-});
+  temperature: { type: Number, required: true },
+}, { timestamps: true });
 
-const Vital = mongoose.model('Vital', vitalSchema);
+const Vitals = mongoose.model('Vitals', vitalsSchema);
 
-module.exports = Vital;
+module.exports = Vitals;

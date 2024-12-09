@@ -4,225 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Vitals Tracker</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      width: 80%;
-      margin: auto;
-      padding-top: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .form-group {
-      margin: 10px 0;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .form-group button {
-      background-color: #e60000;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
-    }
-    .form-group button:hover {
-      background-color: #cc0000;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 12px;
-      text-align: center;
-    }
-    th {
-      background-color: #f4f4f4;
-    }
-    button {
-      padding: 5px 10px;
-      background-color: #e60000;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #cc0000;
-    }
-  </style>
+  <!-- Link to the stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>Daily Vitals Tracker</h1>
-    
-    <!-- Form to add or update vitals -->
-    <div class="form-group">
-      <label for="id">ID</label>
-      <input type="text" id="id" placeholder="Enter ID for Vital" />
-    </div>
-    <div class="form-group">
-      <label for="heartRate">Heart Rate</label>
-      <input type="number" id="heartRate" placeholder="Enter Heart Rate" />
-    </div>
-    <div class="form-group">
-      <label for="bloodPressure">Blood Pressure</label>
-      <input type="number" id="bloodPressure" placeholder="Enter Blood Pressure" />
-    </div>
-    <div class="form-group">
-      <label for="temperature">Temperature</label>
-      <input type="number" id="temperature" placeholder="Enter Temperature" />
-    </div>
-    <div class="form-group">
-      <button id="submitButton" onclick="addOrUpdateVital()">Add Vital</button>
-    </div>
-    
-    <!-- Table to display vitals -->
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Heart Rate</th>
-          <th>Blood Pressure</th>
-          <th>Temperature</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="vitals-table">
-        <!-- Vitals records will be displayed here -->
-      </tbody>
+
+    <!-- Add new vital -->
+    <form id="vitalsForm">
+        <input type="number" id="heartRate" placeholder="Heart Rate" required>
+        <input type="text" id="bloodPressure" placeholder="Blood Pressure" required>
+        <input type="number" id="temperature" placeholder="Temperature" required>
+        <button type="submit">Add Vital</button>
+    </form>
+
+    <!-- Vitals Table -->
+    <table id="vitalsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Heart Rate</th>
+            <th>Blood Pressure</th>
+            <th>Temperature</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Vitals will be dynamically added here -->
+        </tbody>
     </table>
   </div>
 
-  <script>
-    // Fetch vitals data and display in the table
-    function fetchVitals() {
-      fetch('http://localhost:5001/api/vitals')
-        .then(response => response.json())
-        .then(vitals => {
-          const vitalsTable = document.querySelector('#vitals-table');
-          vitalsTable.innerHTML = ''; // Clear the table
-          vitals.forEach(vital => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${vital.id}</td>
-              <td>${vital.heartRate}</td>
-              <td>${vital.bloodPressure}</td>
-              <td>${vital.temperature}</td>
-              <td>
-                <button onclick="editVital('${vital.id}')">Edit</button>
-                <button onclick="deleteVital('${vital.id}')">Delete</button>
-              </td>
-            `;
-            vitalsTable.appendChild(row);
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching vitals:', error);
-          console.log('Error message:', error.message); // Logs the specific error message
-          alert('There was an issue with fetching vitals. Please check the server status.');
-    });
-  }
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2>Edit Vital</h2>
+      <form id="editForm">
+        <input type="hidden" id="id" disabled> <!-- Hidden ID input -->
+        <input type="number" id="editHeartRate" placeholder="Heart Rate" required>
+        <input type="text" id="editBloodPressure" placeholder="Blood Pressure" required>
+        <input type="number" id="editTemperature" placeholder="Temperature" required>
+        <button type="submit">Update Vital</button>
+      </form>
+    </div>
+  </div>
 
-    // Add or update a vital record
-    function addOrUpdateVital() {
-      const id = document.querySelector('#id').value;
-      const heartRate = document.querySelector('#heartRate').value;
-      const bloodPressure = document.querySelector('#bloodPressure').value;
-      const temperature = document.querySelector('#temperature').value;
-
-      const vitalData = { heartRate, bloodPressure, temperature };
-
-      if (id) {
-        // Update vital record
-        fetch(`http://localhost:5001/api/vitals/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(vitalData)
-        })
-        .then(response => response.json())
-        .then(() => {
-          alert('Vital updated!');
-          fetchVitals();  // Refresh the table
-          resetForm();
-        })
-        .catch(error => console.error('Error updating vital:', error));
-      } else {
-        // Add new vital record
-        fetch('http://localhost:5001/api/vitals', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(vitalData)
-        })
-        .then(response => response.json())
-        .then(() => {
-          alert('Vital added!');
-          fetchVitals();  // Refresh the table
-          resetForm();
-        })
-        .catch(error => console.error('Error adding vital:', error));
-      }
-    }
-
-    // Populate the form with the vital data for editing
-    function editVital(id) {
-      fetch(`http://localhost:5001/api/vitals/${id}`)
-        .then(response => response.json())
-        .then(vital => {
-          document.querySelector('#id').value = vital.id;
-          document.querySelector('#heartRate').value = vital.heartRate;
-          document.querySelector('#bloodPressure').value = vital.bloodPressure;
-          document.querySelector('#temperature').value = vital.temperature;
-          document.querySelector('#submitButton').textContent = 'Update Vital';  // Change button text
-        })
-        .catch(error => console.error('Error fetching vital for edit:', error));
-    }
-
-    // Delete a vital record
-    function deleteVital(id) {
-      if (confirm('Are you sure you want to delete this vital record?')) {
-        fetch(`http://localhost:5001/api/vitals/${id}`, {
-          method: 'DELETE',
-        })
-        .then(() => {
-          alert('Vital deleted!');
-          fetchVitals();  // Refresh the table
-        })
-        .catch(error => console.error('Error deleting vital:', error));
-      }
-    }
-
-    // Reset the form fields
-    function resetForm() {
-      document.querySelector('#id').value = '';
-      document.querySelector('#heartRate').value = '';
-      document.querySelector('#bloodPressure').value = '';
-      document.querySelector('#temperature').value = '';
-      document.querySelector('#submitButton').textContent = 'Add Vital';  // Reset button text
-    }
-
-    // Initialize the application
-    fetchVitals();
-  </script>
+  <!-- Link to the JavaScript -->
+  <script src="app.js"></script>
 </body>
 </html>

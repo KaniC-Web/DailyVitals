@@ -1,29 +1,18 @@
 {
-  "name": "dailyvitalsproject",
+  "name": "daily-vitals-tracker",
   "version": "1.0.0",
-  "description": "\"# DailyVitals\"",
-  "main": "app.js",
+  "description": "A project to track daily vitals like heart rate, blood pressure, and temperature.",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.3",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "joi": "^17.13.3",
-    "mongoose": "^8.8.4"
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0"
   },
-  "directories": {
-    "test": "tests"
-  },
-  "devDependencies": {
-    "chai": "^5.1.2",
-    "mocha": "^11.0.1",
-    "supertest": "^7.0.0"
-  }
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
 }
