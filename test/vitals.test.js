@@ -11,3 +11,10 @@ describe('Vitals API', () => {
       const response = await request(app)
       .post('/api/vitals') // API endpoint for creating a vital
       .send(newVital); // Send data as request body
+
+    expect(response.status).toBe(201); // Expect HTTP 201 Created
+    expect(response.body).toHaveProperty('_id'); // Check if response contains _id
+    expect(response.body.heartRate).toBe(newVital.heartRate); // Validate heartRate
+    expect(response.body.bloodPressure).toBe(newVital.bloodPressure); // Validate bloodPressure
+    expect(response.body.temperature).toBe(newVital.temperature); // Validate temperature
+  })
