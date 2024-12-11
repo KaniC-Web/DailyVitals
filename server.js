@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const vitalsRoutes = require('./src/routes/vitalsRoutes');
 require('dotenv').config();
 
@@ -12,6 +13,9 @@ app.use(cors());
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Log incoming requests in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -32,9 +36,9 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dailyVitals
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
-// Base route
+// Route for serving the index.html for the root path
 app.get('/', (req, res) => {
-  res.send('Welcome to the Daily Vitals API!');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server only when the file is executed directly

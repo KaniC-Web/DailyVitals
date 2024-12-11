@@ -6,7 +6,7 @@ const {
   updateVital,
   deleteVital,
 } = require('../controllers/vitalsController'); // Import controller
-const Vital = require('../models/vital'); // Import the Vital model
+const Vitals = require('../models/vitalsModel'); // Corrected the model import here
 
 // Routes for vitals
 router.get('/vitals', getAllVitals);          // Get all vitals
@@ -17,7 +17,7 @@ router.delete('/vitals/:id', deleteVital);   // Delete a vital by ID
 // Add this route for health tips
 router.get('/vitals/health-tips', async (req, res) => {
   try {
-    const vitals = await Vital.find();  // Fetch all vitals from the DB
+    const vitals = await Vitals.find();  // Fetch all vitals from the DB
 
     if (!vitals.length) {
       console.log("No vitals data found."); // Debugging: Check if data is missing
@@ -29,8 +29,8 @@ router.get('/vitals/health-tips', async (req, res) => {
 
     // Calculating averages and ranges for health tips
     const avgHeartRate = vitals.reduce((sum, v) => sum + v.heartRate, 0) / vitals.length;
-    const maxBP = Math.max(...vitals.map(v => v.bloodPressure));
-    const minBP = Math.min(...vitals.map(v => v.bloodPressure));
+    const maxBP = Math.max(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); // Parsing to integer for max BP calculation
+    const minBP = Math.min(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); // Parsing to integer for min BP calculation
 
     console.log("Avg Heart Rate:", avgHeartRate);  // Debugging average heart rate
     console.log("Max BP:", maxBP);  // Debugging max BP
@@ -65,3 +65,5 @@ router.get('/vitals/health-tips', async (req, res) => {
     res.status(500).json({ error: 'Error generating health tips' });
   }
 });
+
+module.exports = router;
