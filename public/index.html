@@ -11,28 +11,36 @@
   <div class="container">
     <h1>Daily Vitals Tracker</h1>
 
+    <!-- Health Tips Section -->
+    <section id="health-tips-section">
+      <h2>Health Tips</h2>
+      <div id="health-tips">
+        <p>Loading health tips...</p>
+      </div>
+    </section>
+
     <!-- Add new vital -->
     <form id="vitalsForm">
-        <input type="number" id="heartRate" placeholder="Heart Rate" required>
-        <input type="text" id="bloodPressure" placeholder="Blood Pressure" required>
-        <input type="number" id="temperature" placeholder="Temperature" required>
-        <button type="submit">Add Vital</button>
+      <input type="number" id="heartRate" placeholder="Heart Rate" required>
+      <input type="text" id="bloodPressure" placeholder="Blood Pressure" required>
+      <input type="number" id="temperature" placeholder="Temperature" required>
+      <button type="submit">Add Vital</button>
     </form>
 
     <!-- Vitals Table -->
     <table id="vitalsTable">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Heart Rate</th>
-            <th>Blood Pressure</th>
-            <th>Temperature</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Vitals will be dynamically added here -->
-        </tbody>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Heart Rate</th>
+          <th>Blood Pressure</th>
+          <th>Temperature</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Vitals will be dynamically added here -->
+      </tbody>
     </table>
   </div>
 
@@ -42,7 +50,7 @@
       <span id="closeModal" class="close">&times;</span>
       <h2>Edit Vital</h2>
       <form id="editForm">
-        <input type="hidden" id="id" disabled> <!-- Hidden ID input -->
+        <input type="hidden" id="id" readonly>
         <input type="number" id="editHeartRate" placeholder="Heart Rate" required>
         <input type="text" id="editBloodPressure" placeholder="Blood Pressure" required>
         <input type="number" id="editTemperature" placeholder="Temperature" required>
@@ -54,4 +62,3 @@
   <!-- Link to the JavaScript -->
   <script src="app.js"></script>
 </body>
-</html>

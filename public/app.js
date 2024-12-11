@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const newVital = { heartRate, bloodPressure, temperature };
 
-    fetch('http://localhost:5001/api/vitals', {
+    fetch('http://localhost:5001/api/vitals/health-tips', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -110,4 +110,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize the vitals list
   fetchVitals();
+
+  // Other existing functions for CRUD actions...
+
+// Function to fetch health tips
+function fetchHealthTips() {
+  fetch('/api/vitals/health-tips')
+    .then(response => response.json())
+    .then(data => {
+      const tipsSection = document.getElementById('health-tips');
+      if (data.tips) {
+        tipsSection.innerHTML = data.tips.map(tip => `<p>${tip}</p>`).join('');
+      } else {
+        tipsSection.innerHTML = `<p>${data.message}</p>`;
+      }
+    })
+    .catch(error => console.error('Error fetching health tips:', error));
+}
+
+// Call the function on page load
+fetchHealthTips();
+
 });
