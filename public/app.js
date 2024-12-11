@@ -102,15 +102,16 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         const tipsSection = document.getElementById('health-tips');
-        if (data.tips) {
+        if (Array.isArray(data.tips) && data.tips.length > 0) {
           tipsSection.innerHTML = data.tips.map(tip => `<p>${tip}</p>`).join('');
         } else {
-          tipsSection.innerHTML = `<p>${data.message}</p>`;
+          tipsSection.innerHTML = '<p>No health tips available at this time.</p>';
         }
       })
       .catch(error => {
         console.error('Error fetching health tips:', error);
-        document.getElementById('health-tips').innerHTML = '<p>Error fetching health tips.</p>';
+        const tipsSection = document.getElementById('health-tips');
+        tipsSection.innerHTML = '<p>Error fetching health tips.</p>';
       });
   }
 
