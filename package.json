@@ -3,18 +3,13 @@
   "version": "1.0.0",
   "description": "A project to track daily vitals like heart rate, blood pressure, and temperature.",
   "main": "server.js",
-  
   "scripts": {
-     "start": "node server.js"
+    "start": "node server.js"
   },
-
-  "scripts": {
-  "test": "jest"
-  },
-  
   "dependencies": {
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "mongoose": "^7.0.0"
   },
