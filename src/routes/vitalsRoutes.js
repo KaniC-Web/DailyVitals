@@ -17,18 +17,28 @@ router.delete('/vitals/:id', deleteVital);   // Delete a vital by ID
 // Add this route for health tips
 router.get('/vitals/health-tips', async (req, res) => {
   try {
-    const vitals = await Vital.find();
+    const vitals = await Vital.find();  // Fetch all vitals from the DB
 
     if (!vitals.length) {
-      return res.json({ tips: ["No health tips available. Add vitals data to receive personalized tips."] });
+      console.log("No vitals data found."); // Debugging: Check if data is missing
+      return res.json({ message: "No vitals data available for analysis." });
     }
 
+    // Log the vitals fetched
+    console.log("Vitals data fetched:", vitals);
+
+    // Calculating averages and ranges for health tips
     const avgHeartRate = vitals.reduce((sum, v) => sum + v.heartRate, 0) / vitals.length;
     const maxBP = Math.max(...vitals.map(v => v.bloodPressure));
     const minBP = Math.min(...vitals.map(v => v.bloodPressure));
 
-    // Basic health tips logic
+    console.log("Avg Heart Rate:", avgHeartRate);  // Debugging average heart rate
+    console.log("Max BP:", maxBP);  // Debugging max BP
+    console.log("Min BP:", minBP);  // Debugging min BP
+
     const tips = [];
+
+    // Health tips logic
     if (avgHeartRate > 100) {
       tips.push("Your average heart rate is high. Consider regular exercise and reducing stress.");
     } else if (avgHeartRate < 60) {
@@ -47,10 +57,11 @@ router.get('/vitals/health-tips', async (req, res) => {
       tips.push("Your blood pressure is in a healthy range. Great job!");
     }
 
+    console.log("Generated tips:", tips); // Debugging: Check the generated tips
+
     res.json({ tips });
   } catch (error) {
-    res.status(500).json({ tips: ["Error generating health tips. Please try again later."] });
+    console.error("Error generating health tips:", error);  // Log any error in generating health tips
+    res.status(500).json({ error: 'Error generating health tips' });
   }
 });
-
-module.exports = router;
