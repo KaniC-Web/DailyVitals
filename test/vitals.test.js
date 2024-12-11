@@ -17,4 +17,12 @@ describe('Vitals API', () => {
     expect(response.body.heartRate).toBe(newVital.heartRate); // Validate heartRate
     expect(response.body.bloodPressure).toBe(newVital.bloodPressure); // Validate bloodPressure
     expect(response.body.temperature).toBe(newVital.temperature); // Validate temperature
-  })
+  });
+
+  // Test for fetching vitals
+  it('should fetch all vitals', async () => {
+    const response = await request(app).get('/api/vitals'); // API endpoint for fetching all vitals
+    expect(response.status).toBe(200); // Expect HTTP 200 OK
+    expect(Array.isArray(response.body)).toBe(true); // Validate response is an array
+  });
+});
