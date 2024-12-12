@@ -6,62 +6,64 @@ const {
   updateVital,
   deleteVital,
 } = require('../controllers/vitalsController'); // Import controller
-const Vitals = require('../models/vitalsModel'); 
+const Vitals = require('../models/vitalsModel');
 
 // Routes for vitals
-router.get('/vitals', getAllVitals);          
-router.post('/vitals', createVital);        
-router.put('/vitals/:id', updateVital);      
-router.delete('/vitals/:id', deleteVital);   
+router.get('/vitals', getAllVitals); // Get all vitals
+router.post('/vitals', createVital); // Create a new vital
+router.put('/vitals/:id', updateVital); // Update an existing vital
+router.delete('/vitals/:id', deleteVital); // Delete a vital by ID
 
-// Add this route for health tips
+// Health tips route that generates tips based on the most recent vital
 router.get('/vitals/health-tips', async (req, res) => {
   try {
-    const vitals = await Vitals.find();  // Fetch all vitals from the DB
+    const latestVital = await Vitals.findOne().sort({ _id: -1 }); // Fetch the most recent vital entry
 
-    if (!vitals.length) {
+    if (!latestVital) {
       console.log("No vitals data found."); // Debugging: Check if data is missing
       return res.json({ message: "No vitals data available for analysis." });
     }
 
-    // Log the vitals fetched
-    console.log("Vitals data fetched:", vitals);
+    console.log("Latest Vital Data fetched:", latestVital); // Log the latest vital
 
-    // Calculating averages and ranges for health tips
-    const avgHeartRate = vitals.reduce((sum, v) => sum + v.heartRate, 0) / vitals.length;
-    const maxBP = Math.max(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); 
-    const minBP = Math.min(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); 
-
-    console.log("Avg Heart Rate:", avgHeartRate); 
-    console.log("Max BP:", maxBP);  
-    console.log("Min BP:", minBP); 
-
+    const { heartRate, bloodPressure, temperature } = latestVital;
     const tips = [];
 
-    // Health tips logic
-    if (avgHeartRate > 100) {
-      tips.push("Your average heart rate is high. Consider regular exercise and reducing stress.");
-    } else if (avgHeartRate < 60) {
-      tips.push("Your average heart rate is low. Consult your doctor if you feel fatigued or dizzy.");
+    // Health tips logic based on the latest data
+    if (heartRate > 100) {
+      tips.push("Your heart rate is high. Consider reducing stress and engaging in regular exercise.");
+    } else if (heartRate < 60) {
+      tips.push("Your heart rate is low. Consult your doctor if you feel fatigued or dizzy.");
     } else {
       tips.push("Your heart rate is normal. Keep up the good work!");
     }
 
-    if (maxBP > 140) {
-      tips.push("Your blood pressure seems high. Avoid salty foods and manage stress.");
+    // Handle blood pressure, assuming it's stored as 'systolic/diastolic' format
+    if (bloodPressure) {
+      const [systolic, diastolic] = bloodPressure.split('/').map(Number);
+      
+      if (systolic > 140 || diastolic > 90) {
+        tips.push("Your blood pressure is high. Avoid salty foods and manage stress.");
+      } else if (systolic < 90 || diastolic < 60) {
+        tips.push("Your blood pressure is low. Stay hydrated and eat balanced meals.");
+      } else {
+        tips.push("Your blood pressure is within a healthy range. Great job!");
+      }
     }
 
-    if (minBP < 90) {
-      tips.push("Low blood pressure detected. Stay hydrated and eat balanced meals.");
+    if (temperature > 99.5) {
+      tips.push("You have a fever. Rest and stay hydrated.");
+    } else if (temperature < 97.0) {
+      tips.push("Your body temperature is low. Keep warm and monitor your health.");
     } else {
-      tips.push("Your blood pressure is in a healthy range. Great job!");
+      tips.push("Your body temperature is normal.");
     }
 
-    console.log("Generated tips:", tips); 
+    console.log("Generated tips:", tips); // Log the generated tips for debugging
 
     res.json({ tips });
   } catch (error) {
-    console.error("Error generating health tips:", error); 
+    console.error("Error generating health tips:", error); // Log any errors
     res.status(500).json({ error: 'Error generating health tips' });
   }
 });
