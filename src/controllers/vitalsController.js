@@ -3,7 +3,7 @@ const Vitals = require('../models/vitalsModel');
 // Get all vitals
 const getAllVitals = async (req, res) => {
   try {
-    const vitals = await Vitals.find(); // Fetch all vitals from database
+    const vitals = await Vitals.find(); 
     res.status(200).json(vitals);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch vitals' });
@@ -15,8 +15,8 @@ const createVital = async (req, res) => {
   const { heartRate, bloodPressure, temperature } = req.body;
   try {
     const newVital = new Vitals({ heartRate, bloodPressure, temperature });
-    await newVital.save(); // Save the new vital to database
-    res.status(201).json(newVital); // Respond with the created vital
+    await newVital.save(); 
+    res.status(201).json(newVital);
   } catch (error) {
     res.status(400).json({ error: 'Failed to create vital' });
   }
@@ -24,12 +24,12 @@ const createVital = async (req, res) => {
 
 // Update an existing vital by ID
 const updateVital = async (req, res) => {
-  const { id } = req.params; // Extract ID from the request params
-  const updates = req.body; // Get updated fields from request body
+  const { id } = req.params; 
+  const updates = req.body; 
   try {
-    const updatedVital = await Vitals.findByIdAndUpdate(id, updates, { new: true }); // Update and return the new vital
-    if (!updatedVital) return res.status(404).json({ error: 'Vital not found' }); // Handle non-existent vital
-    res.status(200).json(updatedVital); // Respond with the updated vital
+    const updatedVital = await Vitals.findByIdAndUpdate(id, updates, { new: true });
+    if (!updatedVital) return res.status(404).json({ error: 'Vital not found' }); 
+    res.status(200).json(updatedVital); 
   } catch (error) {
     res.status(400).json({ error: 'Failed to update vital' });
   }
