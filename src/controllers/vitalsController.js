@@ -37,11 +37,11 @@ const updateVital = async (req, res) => {
 
 // Delete a vital by ID
 const deleteVital = async (req, res) => {
-  const { id } = req.params; // Extract ID from the request params
+  const { id } = req.params; 
   try {
-    const deletedVital = await Vitals.findByIdAndDelete(id); // Delete the vital from the database
-    if (!deletedVital) return res.status(404).json({ error: 'Vital not found' }); // Handle non-existent vital
-    res.status(204).end(); // Respond with no content
+    const deletedVital = await Vitals.findByIdAndDelete(id); 
+    if (!deletedVital) return res.status(404).json({ error: 'Vital not found' }); 
+    res.status(204).end(); 
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete vital' });
   }
