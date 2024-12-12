@@ -31,13 +31,12 @@ Install the required dependencies:  npm install
 4.	Set Up Environment Variables
 o	Create a .env file in the root directory and add the following content to the .env file: 
 5.	MONGO_URI=mongodb://localhost:27017/dailyVitals
-6.	PORT=5001
-7.	
-8.	Start the Backend Server
+  	PORT=5001
+6.	Start the Backend Server
 Run the server using:  node server.js
-9.	Run the Frontend
+7.	Run the Frontend
 o	Serve the index.html file located in the public folder using a local server (e.g., Live Server in VSCode).
-10.	Access the Application
+8.	Access the Application
 Open the browser and navigate to:  http://127.0.0.1:5500/public/index.html
 Deployment Instructions
 Frontend Deployment on Azure Static Web Apps
