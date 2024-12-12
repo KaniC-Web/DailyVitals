@@ -48,7 +48,7 @@ const createVital = async (req, res) => {
       tips.push("Your body temperature is normal.");
     }
 
-    res.status(201).json({ newVital, tips }); // Return the created vital and the health tips
+    res.status(201).json({ newVital, tips }); 
   } catch (error) {
     res.status(400).json({ error: 'Failed to create vital' });
   }
@@ -93,7 +93,7 @@ const updateVital = async (req, res) => {
       tips.push("Your body temperature is normal.");
     }
 
-    res.status(200).json({ updatedVital, tips }); // Return the updated vital and the health tips
+    res.status(200).json({ updatedVital, tips }); 
   } catch (error) {
     res.status(400).json({ error: 'Failed to update vital' });
   }
@@ -114,14 +114,14 @@ const deleteVital = async (req, res) => {
 // Get health tips based on the most recent vital
 const getHealthTips = async (req, res) => {
   try {
-    const latestVital = await Vitals.findOne().sort({ _id: -1 }); // Fetch the most recent vital entry
+    const latestVital = await Vitals.findOne().sort({ _id: -1 }); 
 
     if (!latestVital) {
-      console.log("No vitals data found."); // Debugging: Check if data is missing
+      console.log("No vitals data found."); 
       return res.json({ message: "No vitals data available for analysis." });
     }
 
-    console.log("Latest Vital Data fetched:", latestVital); // Log the latest vital
+    console.log("Latest Vital Data fetched:", latestVital); 
 
     const { heartRate, bloodPressure, temperature } = latestVital;
     const tips = [];
@@ -156,11 +156,11 @@ const getHealthTips = async (req, res) => {
       tips.push("Your body temperature is normal.");
     }
 
-    console.log("Generated tips:", tips); // Log the generated tips for debugging
+    console.log("Generated tips:", tips); 
 
     res.json({ tips });
   } catch (error) {
-    console.error("Error generating health tips:", error); // Log any errors
+    console.error("Error generating health tips:", error); 
     res.status(500).json({ error: 'Error generating health tips' });
   }
 };
