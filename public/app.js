@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           vitalsTableBody.appendChild(row);
         });
+        // Fetch health tips after fetching vitals
+        fetchHealthTips();
       })
       .catch(error => console.error('Error fetching vitals:', error));
   }
@@ -116,5 +118,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   fetchVitals();
-  fetchHealthTips();
 });
