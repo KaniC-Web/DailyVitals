@@ -6,13 +6,13 @@ const {
   updateVital,
   deleteVital,
 } = require('../controllers/vitalsController'); // Import controller
-const Vitals = require('../models/vitalsModel'); // Corrected the model import here
+const Vitals = require('../models/vitalsModel'); 
 
 // Routes for vitals
-router.get('/vitals', getAllVitals);          // Get all vitals
-router.post('/vitals', createVital);         // Create a new vital
-router.put('/vitals/:id', updateVital);      // Update a vital by ID
-router.delete('/vitals/:id', deleteVital);   // Delete a vital by ID
+router.get('/vitals', getAllVitals);          
+router.post('/vitals', createVital);        
+router.put('/vitals/:id', updateVital);      
+router.delete('/vitals/:id', deleteVital);   
 
 // Add this route for health tips
 router.get('/vitals/health-tips', async (req, res) => {
@@ -29,12 +29,12 @@ router.get('/vitals/health-tips', async (req, res) => {
 
     // Calculating averages and ranges for health tips
     const avgHeartRate = vitals.reduce((sum, v) => sum + v.heartRate, 0) / vitals.length;
-    const maxBP = Math.max(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); // Parsing to integer for max BP calculation
-    const minBP = Math.min(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); // Parsing to integer for min BP calculation
+    const maxBP = Math.max(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); 
+    const minBP = Math.min(...vitals.map(v => parseInt(v.bloodPressure.split('/')[0]))); 
 
-    console.log("Avg Heart Rate:", avgHeartRate);  // Debugging average heart rate
-    console.log("Max BP:", maxBP);  // Debugging max BP
-    console.log("Min BP:", minBP);  // Debugging min BP
+    console.log("Avg Heart Rate:", avgHeartRate); 
+    console.log("Max BP:", maxBP);  
+    console.log("Min BP:", minBP); 
 
     const tips = [];
 
@@ -57,11 +57,11 @@ router.get('/vitals/health-tips', async (req, res) => {
       tips.push("Your blood pressure is in a healthy range. Great job!");
     }
 
-    console.log("Generated tips:", tips); // Debugging: Check the generated tips
+    console.log("Generated tips:", tips); 
 
     res.json({ tips });
   } catch (error) {
-    console.error("Error generating health tips:", error);  // Log any error in generating health tips
+    console.error("Error generating health tips:", error); 
     res.status(500).json({ error: 'Error generating health tips' });
   }
 });
