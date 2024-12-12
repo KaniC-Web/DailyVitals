@@ -27,10 +27,26 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           vitalsTableBody.appendChild(row);
         });
-        // Fetch health tips after fetching vitals
-        fetchHealthTips();
       })
       .catch(error => console.error('Error fetching vitals:', error));
+  }
+
+  function fetchHealthTips() {
+    fetch('http://localhost:5001/api/vitals/health-tips')
+      .then(response => response.json())
+      .then(data => {
+        const tipsSection = document.getElementById('health-tips');
+        if (Array.isArray(data.tips) && data.tips.length > 0) {
+          tipsSection.innerHTML = data.tips.map(tip => `<p>${tip}</p>`).join('');
+        } else {
+          tipsSection.innerHTML = '<p>No health tips available at this time.</p>';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching health tips:', error);
+        const tipsSection = document.getElementById('health-tips');
+        tipsSection.innerHTML = '<p>Error fetching health tips.</p>';
+      });
   }
 
   window.editVital = function (id, heartRate, bloodPressure, temperature) {
@@ -63,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
           alert('Vital updated successfully!');
           fetchVitals();
+          fetchHealthTips(); // Refresh health tips
           editModal.style.display = 'none';
         } else {
           return response.json().then(err => {
@@ -88,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
       .then(() => {
         fetchVitals();
+        fetchHealthTips(); // Refresh health tips
         vitalsForm.reset();
       })
       .catch(error => console.error('Error adding vital:', error));
@@ -95,27 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.deleteVital = function (id) {
     fetch(`http://localhost:5001/api/vitals/${id}`, { method: 'DELETE' })
-      .then(() => fetchVitals())
+      .then(() => {
+        fetchVitals();
+        fetchHealthTips(); // Refresh health tips
+      })
       .catch(error => console.error('Error deleting vital:', error));
   };
 
-  function fetchHealthTips() {
-    fetch('http://localhost:5001/api/vitals/health-tips')
-      .then(response => response.json())
-      .then(data => {
-        const tipsSection = document.getElementById('health-tips');
-        if (Array.isArray(data.tips) && data.tips.length > 0) {
-          tipsSection.innerHTML = data.tips.map(tip => `<p>${tip}</p>`).join('');
-        } else {
-          tipsSection.innerHTML = '<p>No health tips available at this time.</p>';
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching health tips:', error);
-        const tipsSection = document.getElementById('health-tips');
-        tipsSection.innerHTML = '<p>Error fetching health tips.</p>';
-      });
-  }
-
   fetchVitals();
+  fetchHealthTips();
 });
